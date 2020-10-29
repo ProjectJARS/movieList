@@ -11,11 +11,14 @@ app.use(express.static("public"))
 app.set('view engine', 'ejs');
 
 
-var trialHomePage = require("./routes/trialHomePage");
+var movie = require("./routes/movie");
+/*var trialHomePage = require("./routes/trialHomePage");
+app.use("/",trialHomePage);*/
 
+console.log("Called");
+app.get("/movie",movie);
+app.get("/",require("./routes/trialHomePage"));
 
-
-app.use("/",trialHomePage);
 
 
 app.listen(3000, function() {
