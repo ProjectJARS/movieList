@@ -15,7 +15,7 @@ var movie = require("./routes/movie");
 /*var trialHomePage = require("./routes/trialHomePage");
 app.use("/",trialHomePage);*/
 
-console.log("Called");
+//console.log("Called");
 app.get("/movie", movie);
 app.get("/", require("./routes/trialHomePage"));
 
