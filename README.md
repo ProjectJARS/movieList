@@ -7,6 +7,9 @@ A web app helping users to keep a track of movies they have seen or want to see 
 
 Run npm install inside the root folder before starting the project.
 
+# npm start
+To start the project. It runs the script nodemon start using nodemon
+
 # MVC Achitecture
 Directory system based on NodeJS MVC architecture.
 <ul>
