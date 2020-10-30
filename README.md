@@ -2,6 +2,11 @@
 
 A web app helping users to keep a track of movies they have seen or want to see or share movie recommendations with friends
 
+# Pre Requisits
+1) Node Js must be installed.
+
+Run npm install inside the root folder before starting the project.
+
 # MVC Achitecture
 Directory system based on NodeJS MVC architecture.
 <ul>
