@@ -16,8 +16,24 @@ var movie = require("./routes/movie");
 app.use("/",trialHomePage);*/
 
 //console.log("Called");
+
 app.get("/movie", movie);
 app.get("/", require("./routes/trialHomePage"));
+
+
+
+app.get("/search_movie", function (req, res) {
+  if (!req.query.movieId) {
+    console.log("Hello")
+    res.send('<form action ="/search_movie" method = "get">Movie ID:<input type="text" name="movieId"/><input type="submit" value="GO"></form>');
+  }
+  else {
+    res.redirect("/movie?movieId=" + req.query.movieId);
+  }
+
+});
+
+
 
 app.listen(3000, function () {
   console.log("Server started on port 3000");
