@@ -9,10 +9,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const api = process.env.MOVIE_API_KEY;
 const apiKey = "?api_key=" + api;
-const argUrl = "https://api.themoviedb.org/3/movie/";
+const orginalArgumentUrl = process.env.MOVIE_API_URL;
 
-module.exports.getDetails = async function (movieId) {
-  let targetUrl = argUrl + movieId + apiKey;
+module.exports.getAll = async function (searchId, searchType) {
+  let movieDetailsInfo = await getDetails(searchId, searchType);
+  let trailerInfo = await getTrailer(searchId, searchType);
+  let castAndCrewInfo = await getCastAndCrew(searchId, searchType);
+  let similarMoviesInfo = await getSimilarMovie(searchId, searchType);
+  return [movieDetailsInfo, trailerInfo, castAndCrewInfo, similarMoviesInfo,];
+}
+
+module.exports.getDetails = getDetails;
+async function getDetails(searchId, searchType) {
+  let argUrl = orginalArgumentUrl + searchType + "/";
+  let targetUrl = argUrl + searchId + apiKey;
+  console.log("Getting details from: " + targetUrl);
   const responsePromise = got(targetUrl);
   const bufferPromise = responsePromise.buffer();
   const jsonPromise = responsePromise.json();
@@ -21,23 +32,35 @@ module.exports.getDetails = async function (movieId) {
     bufferPromise,
     jsonPromise,
   ]);
-  const movieData = JSON.parse(response.body);
 
+
+  const movieData = JSON.parse(response.body);
   var movieObject = {
+    id: movieData.id,
     original_title: movieData.original_title,
     release_date: movieData.release_date,
+    original_name: movieData.original_name,
+    first_air_date: movieData.first_air_date,
     original_language: movieData.original_language,
     genres: movieData.genres,
     overview: movieData.overview,
+    number_of_seasons: movieData.number_of_seasons,
     poster_path: "https://image.tmdb.org/t/p/w500/" + movieData.poster_path,
     vote_average: movieData.vote_average,
     runTime: movieData.runtime,
+    created_by: [
+      movieData.created_by
+    ],
   };
   return movieObject;
+
 };
 
-module.exports.getTrailer = async function (movieId) {
-  let trailerUrl = argUrl + movieId + "/videos" + apiKey;
+module.exports.getTrailer = getTrailer;
+async function getTrailer(searchId, searchType) {
+  let argUrl = orginalArgumentUrl + searchType + "/";
+  let trailerUrl = argUrl + searchId + "/videos" + apiKey;
+  console.log("Getting trailer from: " + trailerUrl);
   const responsePromise = got(trailerUrl);
   const bufferPromise = responsePromise.buffer();
   const jsonPromise = responsePromise.json();
@@ -66,8 +89,12 @@ module.exports.getTrailer = async function (movieId) {
   return trailerObj;
 };
 
-module.exports.getCastAndCrew = async function (movieId) {
-  let trailerUrl = argUrl + movieId + "/credits" + apiKey;
+
+module.exports.getCastAndCrew = getCastAndCrew;
+async function getCastAndCrew(searchId, searchType) {
+  let argUrl = orginalArgumentUrl + searchType + "/";
+  let trailerUrl = argUrl + searchId + "/credits" + apiKey;
+  console.log("Getting cast and crew info from: " + trailerUrl);
   const responsePromise = got(trailerUrl);
   const bufferPromise = responsePromise.buffer();
   const jsonPromise = responsePromise.json();
@@ -112,8 +139,11 @@ module.exports.getCastAndCrew = async function (movieId) {
   return castAndCrewInfo;
 };
 
-module.exports.getSimilarMovie = async function (movieId) {
-  let trailerUrl = argUrl + movieId + "/similar" + apiKey;
+module.exports.getSimilarMovie = getSimilarMovie;
+async function getSimilarMovie(searchId, searchType) {
+  let argUrl = orginalArgumentUrl + searchType + "/";
+  let trailerUrl = argUrl + searchId + "/similar" + apiKey;
+  console.log("Getting Similar Movies/TV show from: " + trailerUrl);
   const responsePromise = got(trailerUrl);
   const bufferPromise = responsePromise.buffer();
   const jsonPromise = responsePromise.json();
@@ -129,6 +159,7 @@ module.exports.getSimilarMovie = async function (movieId) {
     var similarMovieObj = {
       id: similarMovieList[i].id,
       title: similarMovieList[i].title,
+      original_name: similarMovieList[i].original_name,
       poster_path:
         "https://image.tmdb.org/t/p/w500/" + similarMovieList[i].poster_path,
       release_date: similarMovieList[i].release_date,
