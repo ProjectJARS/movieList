@@ -16,9 +16,9 @@ router.get("/search", function (req, res) {
     else {
         console.log();
         if ((req.query.type).toLocaleLowerCase() === "movie")
-            res.redirect("/movie?searchId=" + req.query.searchId + "&type=" + req.query.type);
+            res.redirect("/movie?searchId=" + req.query.searchId + "&type=" + req.query.type);  //->routes/getInfo.js
         else if ((req.query.type).toLocaleLowerCase() === "tv") {
-            res.redirect("/tv?searchId=" + req.query.searchId + "&type=" + req.query.type);
+            res.redirect("/tv?searchId=" + req.query.searchId + "&type=" + req.query.type); //->routes/getInfo.js
         }
         else {
             res.send("Invalid Arguments");

@@ -12,7 +12,7 @@ app.set('view engine', 'ejs');
 
 router.get("/movie", async function (req, res) {
 	let searchId = req.query.searchId;
-	let searchType = (req.query.type).toLocaleLowerCase();
+	let searchType = (req.query.type).toLowerCase();
 	if (searchType === "movie" && await checkContent.isSearchIdValid(searchId, searchType)) {
 		let [movieDetailsInfo, trailerInfo, castAndCrewInfo, similarMoviesInfo,] = await getMovieOrTvDetails.getAll(searchId, searchType);
 		res.send(movieDetailsInfo);

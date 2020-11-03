@@ -19,10 +19,10 @@ module.exports.getAll = async function (searchId, searchType) {
   return [movieDetailsInfo, trailerInfo, castAndCrewInfo, similarMoviesInfo,];
 }
 
-module.exports.getDetails = getDetails;
-async function getDetails(searchId, searchType) {
+module.exports.getDetails = getDetails
+async function getDetails(searchId, searchType, params = "") {
   let argUrl = orginalArgumentUrl + searchType + "/";
-  let targetUrl = argUrl + searchId + apiKey;
+  let targetUrl = argUrl + searchId + apiKey + params;
   console.log("Getting details from: " + targetUrl);
   const responsePromise = got(targetUrl);
   const bufferPromise = responsePromise.buffer();
@@ -32,28 +32,43 @@ async function getDetails(searchId, searchType) {
     bufferPromise,
     jsonPromise,
   ]);
+  let allMovieData = JSON.parse(response.body);
+  //console.log("SearchID:" + searchId);
+  if (searchId === "day" || searchId === "week" || searchId === "movie" || searchId === "tv") {
+    let movieObjectList = [];
+    allMovieData = allMovieData.results;
 
+    for (let index = 0; index < allMovieData.length; index++) {
+      const movieData = allMovieData[index];
+      movieObjectList.push(getMovieDetails(movieData));
+    }
+    return movieObjectList;
+  }
+  else {
+    return getMovieDetails(allMovieData);
+  }
 
-  const movieData = JSON.parse(response.body);
-  var movieObject = {
-    id: movieData.id,
-    original_title: movieData.original_title,
-    release_date: movieData.release_date,
-    original_name: movieData.original_name,
-    first_air_date: movieData.first_air_date,
-    original_language: movieData.original_language,
-    genres: movieData.genres,
-    overview: movieData.overview,
-    number_of_seasons: movieData.number_of_seasons,
-    poster_path: "https://image.tmdb.org/t/p/w500/" + movieData.poster_path,
-    vote_average: movieData.vote_average,
-    runTime: movieData.runtime,
-    created_by: [
-      movieData.created_by
-    ],
-  };
-  return movieObject;
-
+  function getMovieDetails(movieData) {
+    var movieObject = {
+      id: movieData.id,
+      original_title: movieData.original_title,
+      original_name: movieData.original_name,
+      release_date: movieData.release_date,
+      first_air_date: movieData.first_air_date,
+      original_language: movieData.original_language,
+      genres: movieData.genres,
+      overview: movieData.overview,
+      number_of_seasons: movieData.number_of_seasons,
+      poster_path: "https://image.tmdb.org/t/p/w500/" + movieData.poster_path,
+      vote_average: movieData.vote_average,
+      runTime: movieData.runtime,
+      created_by: [
+        movieData.created_by
+      ],
+      media_type: movieData.media_type
+    };
+    return movieObject;
+  }
 };
 
 module.exports.getTrailer = getTrailer;
