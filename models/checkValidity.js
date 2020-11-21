@@ -23,18 +23,3 @@ module.exports.isSearchIdValid = async function (movieId, searchType, params) {
     });
 };
 
-/*try {
-        const responsePromise = got(targetUrl);
-        const bufferPromise = responsePromise.buffer();
-        const jsonPromise = responsePromise.json();
-        const [response, buffer, json] = await Promise.all([responsePromise, bufferPromise, jsonPromise,]);
-        //console.log("OK");
-        return true;
-    }
-    catch (err) {
-        // console.log("NOT OK");
-        return false;
-    }*/
-
-//335984 ->Blade Runner 2049
-//1396 -> Breaking Bad
