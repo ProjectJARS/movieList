@@ -53,43 +53,31 @@ async function getDetails(searchId, searchType, params = '') {
   } else {
     return getMovieDetails(allMovieData);
   }
+
+  function getMovieDetails(movieData) {
+    var movieObject = {
+      id: movieData.id,
+      original_title: movieData.original_title,
+      original_name: movieData.original_name,
+      release_date: movieData.release_date,
+      first_air_date: movieData.first_air_date,
+      original_language: movieData.original_language,
+      genres: movieData.genres,
+      overview: movieData.overview,
+      number_of_seasons: movieData.number_of_seasons,
+      poster_path: "https://image.tmdb.org/t/p/w500/" + movieData.poster_path,
+      vote_average: movieData.vote_average,
+      runTime: movieData.runtime,
+      created_by: [
+        movieData.created_by
+      ],
+      media_type: movieData.media_type
+    };
+    return movieObject;
+  }
 }
 
-exports.getMovieDetails = (movieData) => {
-  const {
-    id,
-    original_title,
-    release_date,
-    first_air_date,
-    original_language,
-    genres,
-    overview,
-    number_of_seasons,
-    poster_path,
-    vote_average,
-    runtime,
-    created_by,
-    media_type,
-  } = movieData;
 
-  var movieObject = {
-    id,
-    original_title,
-    original_name,
-    release_date,
-    first_air_date,
-    original_language,
-    genres,
-    overview,
-    number_of_seasons,
-    poster_path: 'https://image.tmdb.org/t/p/w500/' + poster_path,
-    vote_average,
-    runtime,
-    created_by,
-    media_type,
-  };
-  return movieObject;
-};
 
 module.exports.getTrailer = getTrailer;
 async function getTrailer(searchId, searchType) {
