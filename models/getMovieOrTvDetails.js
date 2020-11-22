@@ -1,14 +1,14 @@
-const express = require("express");
-const https = require("https");
-const bodyParser = require("body-parser");
-const got = require("got");
+const express = require('express');
+const https = require('https');
+const bodyParser = require('body-parser');
+const got = require('got');
 var router = express.Router();
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const api = process.env.MOVIE_API_KEY;
-const apiKey = "?api_key=" + api;
+const apiKey = '?api_key=' + api;
 const orginalArgumentUrl = process.env.MOVIE_API_URL;
 
 module.exports.getAll = async function (searchId, searchType) {
@@ -16,15 +16,16 @@ module.exports.getAll = async function (searchId, searchType) {
   let trailerInfo = await getTrailer(searchId, searchType);
   let castAndCrewInfo = await getCastAndCrew(searchId, searchType);
   let similarMoviesInfo = await getSimilarMovie(searchId, searchType);
-  return [movieDetailsInfo, trailerInfo, castAndCrewInfo, similarMoviesInfo,];
-}
+  return [movieDetailsInfo, trailerInfo, castAndCrewInfo, similarMoviesInfo];
+};
 
-module.exports.getDetails = getDetails
-async function getDetails(searchId, searchType, params = "") {
-  let argUrl = orginalArgumentUrl + searchType + "/";
+module.exports.getDetails = getDetails;
+async function getDetails(searchId, searchType, params = '') {
+  let argUrl = orginalArgumentUrl + searchType + '/';
   let targetUrl = argUrl + searchId + apiKey + params;
-  console.log("Getting details from: " + targetUrl);
+  console.log('Getting details from: ' + targetUrl);
   const responsePromise = got(targetUrl);
+
   const bufferPromise = responsePromise.buffer();
   const jsonPromise = responsePromise.json();
   const [response, buffer, json] = await Promise.all([
@@ -32,9 +33,15 @@ async function getDetails(searchId, searchType, params = "") {
     bufferPromise,
     jsonPromise,
   ]);
+
   let allMovieData = JSON.parse(response.body);
   //console.log("SearchID:" + searchId);
-  if (searchId === "day" || searchId === "week" || searchId === "movie" || searchId === "tv") {
+  if (
+    searchId === 'day' ||
+    searchId === 'week' ||
+    searchId === 'movie' ||
+    searchId === 'tv'
+  ) {
     let movieObjectList = [];
     allMovieData = allMovieData.results;
 
@@ -43,8 +50,7 @@ async function getDetails(searchId, searchType, params = "") {
       movieObjectList.push(getMovieDetails(movieData));
     }
     return movieObjectList;
-  }
-  else {
+  } else {
     return getMovieDetails(allMovieData);
   }
 
@@ -69,13 +75,15 @@ async function getDetails(searchId, searchType, params = "") {
     };
     return movieObject;
   }
-};
+}
+
+
 
 module.exports.getTrailer = getTrailer;
 async function getTrailer(searchId, searchType) {
-  let argUrl = orginalArgumentUrl + searchType + "/";
-  let trailerUrl = argUrl + searchId + "/videos" + apiKey;
-  console.log("Getting trailer from: " + trailerUrl);
+  let argUrl = orginalArgumentUrl + searchType + '/';
+  let trailerUrl = argUrl + searchId + '/videos' + apiKey;
+  console.log('Getting trailer from: ' + trailerUrl);
   const responsePromise = got(trailerUrl);
   const bufferPromise = responsePromise.buffer();
   const jsonPromise = responsePromise.json();
@@ -90,7 +98,7 @@ async function getTrailer(searchId, searchType) {
   let trailerIndex = 0;
 
   for (trailer in trailerList) {
-    if (trailerList[trailer].type === "Trailer") {
+    if (trailerList[trailer].type === 'Trailer') {
       break;
     } else {
       trailerIndex = trailerIndex + 1;
@@ -102,14 +110,13 @@ async function getTrailer(searchId, searchType) {
     key: trailerList[trailerIndex].key,
   };
   return trailerObj;
-};
-
+}
 
 module.exports.getCastAndCrew = getCastAndCrew;
 async function getCastAndCrew(searchId, searchType) {
-  let argUrl = orginalArgumentUrl + searchType + "/";
-  let trailerUrl = argUrl + searchId + "/credits" + apiKey;
-  console.log("Getting cast and crew info from: " + trailerUrl);
+  let argUrl = orginalArgumentUrl + searchType + '/';
+  let trailerUrl = argUrl + searchId + '/credits' + apiKey;
+  console.log('Getting cast and crew info from: ' + trailerUrl);
   const responsePromise = got(trailerUrl);
   const bufferPromise = responsePromise.buffer();
   const jsonPromise = responsePromise.json();
@@ -129,20 +136,20 @@ async function getCastAndCrew(searchId, searchType) {
       character: castList[i].character,
       name: castList[i].name,
       profile_path:
-        "https://image.tmdb.org/t/p/w500/" + castList[i].profile_path,
+        'https://image.tmdb.org/t/p/w500/' + castList[i].profile_path,
     };
     allCastMembers.push(castObject);
   }
 
   const crewList = castAndCrewList.crew;
   for (i in crewList) {
-    if (crewList[i].job == "Producer" || crewList[i].job == "Director") {
+    if (crewList[i].job == 'Producer' || crewList[i].job == 'Director') {
       var crewObject = {
         id: crewList[i].id,
         name: crewList[i].name,
         job: crewList[i].job,
         profile_path:
-          "https://image.tmdb.org/t/p/w500/" + crewList[i].profile_path,
+          'https://image.tmdb.org/t/p/w500/' + crewList[i].profile_path,
       };
       allCrewMembers.push(crewObject);
     }
@@ -152,13 +159,13 @@ async function getCastAndCrew(searchId, searchType) {
     crew: allCrewMembers,
   };
   return castAndCrewInfo;
-};
+}
 
 module.exports.getSimilarMovie = getSimilarMovie;
 async function getSimilarMovie(searchId, searchType) {
-  let argUrl = orginalArgumentUrl + searchType + "/";
-  let trailerUrl = argUrl + searchId + "/similar" + apiKey;
-  console.log("Getting Similar Movies/TV show from: " + trailerUrl);
+  let argUrl = orginalArgumentUrl + searchType + '/';
+  let trailerUrl = argUrl + searchId + '/similar' + apiKey;
+  console.log('Getting Similar Movies/TV show from: ' + trailerUrl);
   const responsePromise = got(trailerUrl);
   const bufferPromise = responsePromise.buffer();
   const jsonPromise = responsePromise.json();
@@ -176,15 +183,13 @@ async function getSimilarMovie(searchId, searchType) {
       title: similarMovieList[i].title,
       original_name: similarMovieList[i].original_name,
       poster_path:
-        "https://image.tmdb.org/t/p/w500/" + similarMovieList[i].poster_path,
+        'https://image.tmdb.org/t/p/w500/' + similarMovieList[i].poster_path,
       release_date: similarMovieList[i].release_date,
     };
     similarMovies.push(similarMovieObj);
   }
   return similarMovies;
-};
-
-
+}
 
 /*
 module.exports.getDetails = async function (apiKey,movieId,targetUrl){

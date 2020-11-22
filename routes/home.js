@@ -22,8 +22,8 @@ const client = redis.createClient({
     password: process.env.REDIS_PASSWORD
 });
 
-function cacheForTrending(req, res, next) {
-    client.get("trendingContentString", (err, data) => {
+function cache(req, res, next) {
+    client.get("discoverTVorMovieString", (err, data) => {
         if (err) throw err;
         if (data != null) {
             res.send(data);
@@ -64,8 +64,8 @@ router.get("/home/discover", cacheForDiscover, async function (req, res) {
     let page = "&page=" + (req.query.page || "1");
     let year = "&year=" + (req.query.year || "2020");
     let language = "&language=" + (req.query.language || "en");    //Keep a list
-    let genre = "&genre=" + (req.query.genre || ""); //genre ID -Best would be store the values in DB
-    let searchActorId = "&with_cast=" + (req.query.searchActorId || "");; //need to use API
+    let genre = "&genre=" + (req.query.genre || ""); //genre ID - Best would be store the values in DB
+    let searchActorId = "&with_cast=" + (req.query.searchActorId || "");//need to use API
 
     let params = sort_by + page + year + language + genre + searchActorId;
     if (await checkContent.isSearchIdValid("tv", "discover", params) && await checkContent.isSearchIdValid("movie", "discover", params)) {
@@ -78,7 +78,7 @@ router.get("/home/discover", cacheForDiscover, async function (req, res) {
         }
         discoverTVorMovieString = JSON.stringify(discoverTVorMovie);
         client.setex("discoverTVorMovieString", 3600, discoverTVorMovieString);
-        res.send(discoverTVorMovie.discoverTV);
+        res.send(discoverTVorMovie);
     }
     else {
         res.send("Something went wrong");
