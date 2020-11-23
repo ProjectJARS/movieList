@@ -19,7 +19,7 @@ router.get("/movie", async function (req, res) {
 	}
 	else {
 		res.send("Invalid search for movie");
-	}
+	}requestFor
 });
 
 router.get("/tv", async function (req, res) {

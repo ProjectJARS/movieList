@@ -5,10 +5,8 @@ const { searchIdTypes } = require('../utils/search.types');
 const { IMAGE_PATH_BASE_URL } = require('../utils/urls');
 
 exports.getDetails = async ({ searchId, searchType, params = '' }) => {
-  let response = await createRequest({ searchId, searchType, params });
+  let response = await this.createRequest({ searchId, searchType, params });
   let data = JSON.parse(response.body);
-  let trailer = await this.getTrailer({ searchId, searchType });
-  let castnCrew = await this.getCastAndCrew({ searchId, searchType });
 
   if (
     searchId === searchIdTypes.DAY ||
@@ -17,16 +15,18 @@ exports.getDetails = async ({ searchId, searchType, params = '' }) => {
     searchId === searchIdTypes.TV
   ) {
     let resultsList = data.results.map((result) =>
-      getDetailsResponseObject(result)
+      this.getDetailsResponseObject(result)
     );
     return resultsList;
   } else {
-    return { ...getDetailsResponseObject(data), ...castnCrew, trailer };
+    let trailer = await this.getTrailer({ searchId, searchType });
+    let castnCrew = await this.getCastAndCrew({ searchId, searchType });
+    return { ...this.getDetailsResponseObject(data), ...castnCrew, trailer };
   }
 };
 
 exports.getTrailer = async ({ searchId, searchType }) => {
-  let response = await createRequest({
+  let response = await this.createRequest({
     searchId,
     searchType,
     requestFor: '/videos',
@@ -36,7 +36,7 @@ exports.getTrailer = async ({ searchId, searchType }) => {
 };
 
 exports.getCastAndCrew = async ({ searchId, searchType }) => {
-  let response = await createRequest({
+  let response = await this.createRequest({
     searchId,
     searchType,
     requestFor: '/credits',
@@ -66,16 +66,17 @@ exports.getCastAndCrew = async ({ searchId, searchType }) => {
   return castAndCrewInfo;
 };
 
-const createRequest = async ({
+exports.createRequest = async ({
   searchId,
   searchType,
   params,
   requestFor = '',
 }) => {
-  let argUrl = BASE_MOVIE_API_URL + `/${searchType}`;
-  let targetUrl = `${argUrl}/${searchId}${requestFor}?api_key=${API_KEY}${
-    params ? params : ''
-  }`;
+  let targetUrl =
+    BASE_MOVIE_API_URL +
+    `/${searchType}/${searchId}${requestFor}?api_key=${API_KEY}&${
+      params ? params : ''
+    }`;
   console.log('Getting data from:' + targetUrl);
 
   const responsePromise = got(targetUrl);
@@ -91,48 +92,8 @@ const createRequest = async ({
   return response;
 };
 
-exports.getSimilarMovies = async ({ searchId, searchType }) => {
-  let response = await createRequest({
-    searchId,
-    searchType,
-    requestFor: '/similar',
-  });
-
-  return response.results.map((result) => getDetailsResponseObject(result));
-};
-
-exports.getDetailsResponseObject = (responeData) => {
-  const {
-    id,
-    original_title,
-    release_date,
-    first_air_date,
-    original_language,
-    genres,
-    overview,
-    number_of_seasons,
-    poster_path,
-    vote_average,
-    runtime,
-    created_by,
-    media_type,
-  } = responeData;
-
-  var responeObject = {
-    id,
-    original_title,
-    original_name,
-    release_date,
-    first_air_date,
-    original_language,
-    genres,
-    overview,
-    number_of_seasons,
-    poster_path: IMAGE_PATH_BASE_URL + poster_path,
-    vote_average,
-    runtime,
-    created_by,
-    media_type,
-  };
-  return responeObject;
-};
+exports.getDetailsResponseObject = (responseData) => ({
+  ...responseData,
+  poster_path: IMAGE_PATH_BASE_URL + poster_path,
+  created_by: [responseData.created_by],
+});
