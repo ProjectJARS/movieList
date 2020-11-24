@@ -1,21 +1,24 @@
-const { BASE_MOVIE_API_URL } = require("../../utils/api");
+const https = require('https');
 
-module.exports.isSearchIdValid = async ({movieId, searchType, params = ''}) => {
-    console.log("Checking if " + movieId + "is a valid " + searchType);
-    let argUrl = BASE_MOVIE_API_URL + searchType + "/";
-    
-    return new Promise(resolve => {
-        let targetUrl = argUrl + movieId + apiKey + params;
-        console.log({targetUrl})
-        
-        https.get(targetUrl, function (response) {
-            let flag = false;
-            if (response.statusCode == 200) {
-                flag = true;
-            }
-            resolve(flag);
-        })
+const { BASE_MOVIE_API_URL, URL_API_KEY_PARAM } = require('../../config');
+
+module.exports.isSearchIdValid = async ({ searchId, searchType, params }) => {
+  console.log('Checking if ' + searchId + ' is a valid ' + searchType);
+  let argUrl = BASE_MOVIE_API_URL + '/' + searchType;
+
+  return new Promise((resolve) => {
+    let targetUrl = `${argUrl}/${searchId}?${URL_API_KEY_PARAM}${
+      params ? `&${params}` : ''
+    }`;
+    console.log(targetUrl);
+    https.get(targetUrl, function (response) {
+      let flag = false;
+      if (response.statusCode == 200) {
+        flag = true;
+      }
+      resolve(flag);
     });
+  });
 };
 
 /*try {

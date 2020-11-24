@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
+
 const movieAndTvRouter = require('./routes/movies.routes');
 
 const app = express();
@@ -7,6 +9,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 require('dotenv').config();
+
+if(process.env.NODE_ENV === 'development'){
+    app.use(morgan('dev'))
+}
 
 app.use('/movie', movieAndTvRouter);
 app.use('/tv', movieAndTvRouter);

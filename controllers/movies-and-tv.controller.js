@@ -1,15 +1,19 @@
 const movieAndTvUtils = require('../utils/movie-and-tv.utils');
 
-exports.getInfo = (req, res) => {
+exports.getInfo = async (req, res) => {
+  console.log(req.params);
   try {
     const { id: searchId } = req.params;
     const searchType = req.baseUrl.slice(1);
-    const params = req.originalUrl.slice(req.originalUrl.indexof('?') + 1);
+    let params = '';
+    if (req.originalUrl.includes('?')) {
+      params = req.originalUrl.slice(req.originalUrl.indexOf('?') + 1);
+    }
 
-    const info = movieAndTvUtils.getDetails({ searchId, searchType, params });
-    req.status(200).json({ status: 'success', data: info });
+    const info = await movieAndTvUtils.getDetails({ searchId, searchType, params });
+    res.status(200).json({ status: 'success', data: info });
   } catch (error) {
-    res.status(400).text('Bad Request');
+    res.send(error);
   }
 };
 
