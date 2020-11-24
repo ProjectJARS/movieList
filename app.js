@@ -3,19 +3,25 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
 const movieAndTvRouter = require('./routes/movies.routes');
+const searchRoute = require('./routes/search.routes');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
 app.set('view engine', 'ejs');
 require('dotenv').config();
 
-if(process.env.NODE_ENV === 'development'){
-    app.use(morgan('dev'))
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
 }
 
+//movie and tv base route
 app.use('/movie', movieAndTvRouter);
 app.use('/tv', movieAndTvRouter);
+
+//search base route
+app.use('/search', searchRoute);
 
 //var movie = require("./routes/movie");
 /*var trialHomePage = require("./routes/trialHomePage");

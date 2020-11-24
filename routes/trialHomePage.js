@@ -1,12 +1,8 @@
-/*
-	Even though folder is named as "routes", contents in this folder act as
-	the controller
-*/
 
 const express = require("express");
 var router = express.Router();
 const bodyParser = require("body-parser");
-const date = require("../models/date.js");
+const date = require("../controllers/date.controller");
 
 const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
