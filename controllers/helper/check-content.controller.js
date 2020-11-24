@@ -1,16 +1,18 @@
 const https = require('https');
 
 const { BASE_MOVIE_API_URL, URL_API_KEY_PARAM } = require('../../config');
-
+//check of the requested URl is correct or not
 module.exports.isSearchIdValid = async ({ searchId, searchType, params }) => {
   console.log('Checking if ' + searchId + ' is a valid ' + searchType);
   let argUrl = BASE_MOVIE_API_URL + '/' + searchType;
 
-  return new Promise((resolve) => {
+  return new Promise((resolve) => {\
+  //creates url
     let targetUrl = `${argUrl}/${searchId}?${URL_API_KEY_PARAM}${
       params ? `&${params}` : ''
     }`;
     console.log(targetUrl);
+    //requests TMDB API if not success then false
     https.get(targetUrl, function (response) {
       let flag = false;
       if (response.statusCode == 200) {

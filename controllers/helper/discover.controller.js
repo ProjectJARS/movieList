@@ -12,17 +12,19 @@ module.exports.discover = async (req, res) => {
     : ''; //need to use API
   let params = sort_by + page + year + language + genre + searchActorId;
 
+  //check if tv discover URL is correct
   const isTvIdValid = await checkContent.isSearchIdValid({
     searchId: 'tv',
     searchType: 'discover',
     params,
   });
+  //check if movie discover URL is correct
   const isMovieIdValid = await checkContent.isSearchIdValid({
     searchId: 'movie',
     searchType: 'discover',
     params,
   });
-
+  // if correct get movie details and send 
   if (isTvIdValid && isMovieIdValid) {
     let discoverTV = await movieAndTvUtils.getDetails({
       searchType: 'discover',

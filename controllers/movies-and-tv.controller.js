@@ -10,30 +10,36 @@ exports.getInfo = async (req, res) => {
       params = req.originalUrl.slice(req.originalUrl.indexOf('?') + 1);
     }
 
-    const info = await movieAndTvUtils.getDetails({ searchId, searchType, params });
+    const info = await movieAndTvUtils.getDetails({
+      searchId,
+      searchType,
+      params,
+    });
     res.status(200).json({ status: 'success', data: info });
   } catch (error) {
     res.send(error);
   }
 };
 
+//gets Similar movie or TV
 exports.getSimilar = async (req, res) => {
   try {
     const { id: searchId } = req.params;
     const searchType = req.baseUrl.slice(1);
-
+    //create request for TMDB API
     const response = await movieAndTvUtils.createRequest({
       searchId,
       searchType,
       requestFor: '/similar',
     });
-
+    //return required list of object data
     const data = response.results.map((result) =>
       movieAndTvUtils.getDetailsResponseObject(result)
     );
 
     res.status(200).json({ status: 'success', data });
   } catch (error) {
+    console.log(error);
     res.status(400).text('Bad Request');
   }
 };
