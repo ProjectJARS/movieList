@@ -1,7 +1,7 @@
 const app = require('./app');
-const { PORT } = require('./config');
+//const { PORT } = require('./config');
 
-const PORT = PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 //start the server
 app.listen(PORT, () => {

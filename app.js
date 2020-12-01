@@ -4,6 +4,8 @@ const morgan = require('morgan');
 
 const movieAndTvRouter = require('./routes/movies.routes');
 const searchRoute = require('./routes/search.routes');
+const discoverRoute = require('./routes/discover.routes');
+const homeRoute = require('./routes/homePage');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,9 +18,13 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+
+
+app.get('/home', homeRoute);
 //movie and tv base route
 app.use('/movie', movieAndTvRouter);
 app.use('/tv', movieAndTvRouter);
+app.get('/discover', discoverRoute);
 
 //search base route
 app.use('/search', searchRoute);

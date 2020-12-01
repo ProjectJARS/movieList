@@ -9,6 +9,6 @@ router.route('/discover').get(discover);
 
 //example req: /movie/32?{params will go here}
 router.route('/:id').get(movieAndTvController.getInfo);
-router.route('/similar').get(movieAndTvController.getSimilar);
+router.route('/similar/:id').get(movieAndTvController.getSimilar);
 
 module.exports = router;

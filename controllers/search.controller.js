@@ -7,14 +7,9 @@ exports.search = (req, res) => {
       );
   } else {
     if (req.query.type.toLocaleLowerCase() === 'movie')
-      res.redirect(
-        '/movie?searchId=' + req.query.searchId + '&type=' + req.query.type
-      );
-    //->routes/getInfo.js
+      res.redirect('/movie/' + req.query.searchId);  //->routes/getInfo.js
     else if (req.query.type.toLocaleLowerCase() === 'tv') {
-      res.redirect(
-        '/tv?searchId=' + req.query.searchId + '&type=' + req.query.type
-      ); //->routes/getInfo.js
+      res.redirect('/tv/' + req.query.searchId); //->routes/getInfo.js
     } else {
       res.status(400).send('Bad Request');
     }

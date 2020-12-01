@@ -1,4 +1,5 @@
 const got = require('got');
+const { format } = require('morgan');
 
 const { BASE_MOVIE_API_URL, API_KEY } = require('../config');
 const { searchIdTypes } = require('../utils/search.types');
@@ -6,6 +7,7 @@ const { IMAGE_PATH_BASE_URL } = require('../utils/urls');
 
 //details about TV & movies with trailer and cast&crew
 exports.getDetails = async ({ searchId, searchType, params = '' }) => {
+
   try {
     let response = await this.createRequest({ searchId, searchType, params });
     let data = JSON.parse(response.body);
@@ -96,11 +98,10 @@ exports.createRequest = async ({
   if (!searchType) throw new Error('Search type not provided');
 
   console.log(process.env.MOVIE_DB_API_URL);
-//creates requested API url for TMDB API
+  //creates requested API url for TMDB API
   let targetUrl =
     BASE_MOVIE_API_URL +
-    `/${searchType}/${searchId}${requestFor}?api_key=${API_KEY}${
-      params ? `&${params}` : ''
+    `/${searchType}/${searchId}${requestFor}?api_key=${API_KEY}${params ? `&${params}` : ''
     }`;
   console.log('Getting data from: ' + targetUrl);// just a check
 
@@ -122,3 +123,4 @@ exports.getDetailsResponseObject = (responseData) => ({
   poster_path: IMAGE_PATH_BASE_URL + responseData.poster_path,
   created_by: responseData.created_by ? responseData.created_by : [],
 });
+
