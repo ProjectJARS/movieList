@@ -1,19 +1,20 @@
 const express = require("express");
 const https = require("https");
 const bodyParser = require("body-parser");
-var router = express.Router();
 const redis = require("redis");
-const getMovieOrTvDetails = require("../models/getMovieOrTvDetails.js");
+
+
+
+var router = express.Router();
 const checkContent = require("../models/checkValidity.js")
-
-
-
-
+const getMovieOrTvDetails = require("../models/getMovieOrTvDetails.js");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"))
 app.set('view engine', 'ejs');
+//const REDIS_PORT = process.env.PORT || 6379;
+
 
 //Middleware
 const client = redis.createClient({
@@ -34,31 +35,8 @@ function cache(req, res, next) {
     })
 }
 
-function cacheForDiscover(req, res, next) {
-    client.get("discoverTVorMovieString", (err, data) => {
-        if (err) throw err;
-        if (data != null) {
-            res.send(JSON.parse(data));
-        }
-        else {
-            next();
-        }
-    })
-}
 
-
-
-router.get("/home", cacheForTrending, async function (req, res) {
-
-    let trendingContent = await getMovieOrTvDetails.getDetails("week", "trending/all");
-    let trendingContentString = JSON.stringify(trendingContent);
-    client.setex("trendingContentString", 3600, trendingContentString);
-    res.send(trendingContent);
-
-    //also create a banner to encourage user to discover
-});
-
-router.get("/home/discover", cacheForDiscover, async function (req, res) {
+router.get("/discover", cache, async function (req, res) {
 
     let sort_by = "&sort_by=" + (req.query.sort_by || "popularity.desc");
     let page = "&page=" + (req.query.page || "1");
@@ -86,3 +64,8 @@ router.get("/home/discover", cacheForDiscover, async function (req, res) {
 });
 
 module.exports = router;
+
+/*client.flushdb( function (err, succeeded) {
+    console.log(succeeded); // will be true if successfull
+});
+*/

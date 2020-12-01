@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const router = require('./routes/trialHomePage');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,5 +18,8 @@ app.get('/tv', require('./routes/getInfo'));
 app.get('/search', require('./routes/searchMovie'));
 app.get('/home', require('./routes/homePage')); //cache enabled
 app.get('/discover', require('./routes/discover')); //cache enabled
+
+app.get('/login', require('./routes/login'));
+app.get('/register', require('./routes/register'));
 
 module.exports = app;
