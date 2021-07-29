@@ -71,7 +71,8 @@ async function getDetails(searchId, searchType, params = '') {
       created_by: [
         movieData.created_by
       ],
-      media_type: movieData.media_type
+      media_type: movieData.media_type,
+      backdrop_path: movieData.backdrop_path
     };
     return movieObject;
   }
@@ -105,10 +106,13 @@ async function getTrailer(searchId, searchType) {
       continue;
     }
   }
+
+
   var trailerObj = {
     name: trailerList[trailerIndex].name,
     key: trailerList[trailerIndex].key,
   };
+
   return trailerObj;
 }
 
@@ -138,12 +142,13 @@ async function getCastAndCrew(searchId, searchType) {
       profile_path:
         'https://image.tmdb.org/t/p/w500/' + castList[i].profile_path,
     };
+    console.log(castObject.name)
     allCastMembers.push(castObject);
   }
 
   const crewList = castAndCrewList.crew;
   for (i in crewList) {
-    if (crewList[i].job == 'Producer' || crewList[i].job == 'Director') {
+    if (crewList[i].job == 'Creator' || crewList[i].job == 'Producer' || crewList[i].job == 'Director') {
       var crewObject = {
         id: crewList[i].id,
         name: crewList[i].name,

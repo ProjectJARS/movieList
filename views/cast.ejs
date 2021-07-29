@@ -1,0 +1,54 @@
+<style>
+  
+    #similar-box{        
+        overflow-x: scroll;
+          
+    }
+    #similar-card{
+        width:20%;
+        height:50%;  
+        font-size: 1vw;   
+        padding-left: 0px;
+        padding-right: 0px;    
+        margin-bottom: 10px;
+    }
+   
+
+    ::-webkit-scrollbar {
+     
+  width: 10px;
+  
+}
+
+/* Track */
+::-webkit-scrollbar-track {  
+  border-radius: 15px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 15px;
+  
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+</style>
+
+<div class="container-fluid" id="similar-box">
+    <div class="row flex-row flex-nowrap">
+      <% Object.keys(castAndCrewInfo.cast).forEach((key)=> {%>
+        <div class="card" id="similar-card" >
+          <img src=<%= castAndCrewInfo.cast[key]['profile_path'] %> class="card-img-top" alt="Picture not available" >
+          <div class="card-body">
+            <h5 class="card-title"><%= castAndCrewInfo.cast[key]['name'] %></h5>                       
+          </div>     
+                     
+        </div>
+        <%}) %>   
+      
+    </div>
+</div>

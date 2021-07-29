@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+ <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Sinema</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+       
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/styles.css" type="text/css"/> 
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Langar&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Acme&family=Rubik:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Acme&family=Rubik:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;600;800&display=swap" rel="stylesheet">
+    <style>
+        a,
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none;
+  color: inherit;
+}
+    </style>
+    
+</head>
+
+<body style="color: white;">
+    <div class = "heading">
+        <h1><b><a href="/"><img src="images/logo.png" style="height:50px;width:50px"/>Sinema</a></b></h1>
+        <div class="search">
+            <form action="/search" method="GET">   
+            <input type="text" name="searchValue" id="myInput" class="searchBox" placeholder="Search and Find More">
+            </form>
+        </div>
+    </div>
+   
+   
+   <% if(backdrop_path){ %>
+    <div class="movie-box" style="background-image:linear-gradient(rgba(61, 37, 37, 0.9),rgba(61, 25, 25, 0.8) ),url('<%= backdrop_path %>')">
+        <%} else { %>
+            <div class="movie-box" style="background-image:linear-gradient(rgba(0, 0, 0, 0.9),rgba(0, 0, 0, 0.8) )">
+                <% } %>
+      
+        <div class="row g-0">
+          <div class="col-md-4">
+            <div class="movie-box-img">
+                <% if(details.poster_path){ %>
+                <img src=<%= details.poster_path %> alt="..." style="width:95%;border-radius:15px">     
+                <% } %>          
+            </div>
+            <div class="trailer-box">
+                <iframe width="440" height="260" src=<%= trailer %> title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="border-radius:15px" allowfullscreen></iframe>
+            </div>
+            <form action="/addMovie" method="POST">            
+                <div>
+                  <input name="type" value=<%= type %> type="hidden">
+                  <input name="id" value=<%= details.id %> type="hidden">
+                  <input name="poster_path" value=<%= details.poster_path %> type="hidden">
+                </div>               
+                    <button type="submit" variant="primary" style="border-radius:15px;background-color:yellow"><b>Add to My List</b></button>                
+              </form>
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title head-title"><b><%= details.original_name || details.original_title  %></b></h5>
+              <p class="card-text t">Release Date:<button type="button" class="btn btn-light"><b><%=date.substring(0,4) %></b></button></p>
+              <p class="card-text ">Overview:<br><%= details.overview %></p>
+              <p class="card-text ">Rating:<button type="button" class="btn btn-success"><%= details.vote_average %></button></p>   
+              <p class="card-text ">Genres:
+              <% Object.keys(details.genres).forEach((key)=> {%>
+                <button type="button" class="btn btn-light"><b><%= details.genres[key]['name'] %></b></button>
+            <%}) %>
+            </p> 
+            <p class="card-text ">Cast:
+                <div>
+                    <%- include('cast') %>  
+                </div>
+                </p>
+                <p class="card-text ">Crew:
+                <div>
+                    <%- include('crew') %>  
+                </div>
+                </p>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+    
+
+
+         
+     
+     <div>
+        <%- include('similar') %>  
+    </div>
+    
+
+    <style>
+       
+       .movie-box{
+           margin: 15px 20px;
+           padding:25px 40px;
+           border:5px solid black;
+           border-radius: 15px;
+           background-size: cover;
+           
+                          
+            
+       }
+       .trailer-box{
+            margin-top:20px;
+            
+       }
+       
+       .head-title{
+           font-size: 3vw;
+       }
+       .card-text{
+           font-size: 1.3vw;
+            font-weight: 600;
+       }
+    </style>
+</body>

@@ -1,0 +1,31 @@
+<style>
+    #similarTwo-box{        
+        overflow-x: scroll;
+        padding: 15px;   
+       
+       
+    }
+    #similarTwo-card{
+        width:15%;
+        height:50%;  
+       text-shadow: none;
+    }
+    #similarTwo-card img{
+        border-radius: 15px;
+    }
+</style>
+
+<div class="container-fluid" id="similarTwo-box">
+    <h3>Similar:</h3>
+    <div class="row flex-row flex-nowrap">
+        <% Object.keys(similar).forEach((key)=> {%>
+            
+            <div class="col-3" id="similarTwo-card">
+                <a href="http://localhost:4000/<%= type%>?searchId=<%=similar[key]['id']%>&type=<%= type%>" class="hyperlink" target="_blank">
+                <img src=<%= similar[key]['poster_path'] %> class="card-img-top" alt="Picture not available">
+        </a>
+            </div>
+       
+        <%}) %>        
+    </div>
+</div>

@@ -1,7 +1,8 @@
 const express = require("express");
 const https = require("https");
 const bodyParser = require("body-parser");
-const redis = require("redis");
+const jwt = require('jsonwebtoken');
+//const redis = require("redis");
 
 
 
@@ -16,27 +17,27 @@ app.set('view engine', 'ejs');
 //const REDIS_PORT = process.env.PORT || 6379;
 
 
-//Middleware
-const client = redis.createClient({
-    port: process.env.REDIS_PORT,
-    host: process.env.REDIS_HOST,
-    password: process.env.REDIS_PASSWORD
-});
+// //Middleware
+// const client = redis.createClient({
+//     port: process.env.REDIS_PORT,
+//     host: process.env.REDIS_HOST,
+//     password: process.env.REDIS_PASSWORD
+// });
 
-function cache(req, res, next) {
-    client.get("discoverTVorMovieString", (err, data) => {
-        if (err) throw err;
-        if (data != null) {
-            res.send(data);
-        }
-        else {
-            next();
-        }
-    })
-}
+// function cache(req, res, next) {
+//     client.get("discoverTVorMovieString", (err, data) => {
+//         if (err) throw err;
+//         if (data != null) {
+//             res.send(data);
+//         }
+//         else {
+//             next();
+//         }
+//     })
+// }
 
 
-router.get("/discover", cache, async function (req, res) {
+router.get("/discover", async function (req, res) {
 
     let sort_by = "&sort_by=" + (req.query.sort_by || "popularity.desc");
     let page = "&page=" + (req.query.page || "1");
@@ -55,13 +56,19 @@ router.get("/discover", cache, async function (req, res) {
             discoverTV: discoverTV
         }
         discoverTVorMovieString = JSON.stringify(discoverTVorMovie);
-        client.setex("discoverTVorMovieString", 3600, discoverTVorMovieString);
-        res.send(discoverTVorMovie);
+        //client.setex("discoverTVorMovieString", 3600, discoverTVorMovieString);
+        //res.send(discoverTVorMovie);
+        res.render('D:/college/7th sem/project/mvc_arch_nodejs/views/movieWebsite/index', {
+            discoverTVorMovie: discoverTVorMovie,
+            title: 'Discover',
+            addRemove: false
+        });
     }
     else {
         res.send("Something went wrong");
     }
 });
+
 
 module.exports = router;
 
