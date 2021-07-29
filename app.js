@@ -29,6 +29,7 @@ app.get('/register', require('./routes/register'));
 app.post('/addMovie', authenticateToken, require('./routes/mymovies'));
 app.get('/myMovies', authenticateToken, require('./routes/mymovies'));
 app.post('/removeMovie', authenticateToken, require('./routes/mymovies'));
+app.get('/getSimilar', authenticateToken, require('./routes/mymovies'));
 app.get('/faq', require('./routes/faq'));//
 app.get('/team', require('./routes/team'));//
 

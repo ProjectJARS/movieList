@@ -5,6 +5,9 @@ const jwt = require('jsonwebtoken');
 var router = express.Router();
 const getMovieOrTvDetails = require("../models/getMovieOrTvDetails.js");
 const checkContent = require("../models/checkValidity.js")
+const axios = require("axios")
+const got = require('got');
+const CircularJSON = require('circular-json')
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -12,6 +15,8 @@ app.use(express.static("public"))
 app.set('view engine', 'ejs');
 
 const mongoose = require('mongoose');
+const { syncIndexes } = require("../models/userModel.js");
+const { link } = require("fs");
 mongoose.connect("mongodb://localhost:27017/chillpill", {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -104,5 +109,65 @@ router.get("/myMovies", async function (req, res) {
         }
     })
 });
+
+
+async function generateResults(data) {
+
+    let linksArr = [];
+    for (let i = 0; i < data.length; i++) {
+        linksArr.push("https://api.themoviedb.org/3/movie/" + data[i] + "?api_key=" + process.env.MOVIE_API_KEY + "&language=en-US")
+    }
+    return axios.all(linksArr.map(l => axios.get(l)))
+        .then(await axios.spread(async function (...result) {
+            console.log('i should go first')
+            return result
+        })).finally(() => {
+            console.log("i should go second");
+        });;
+}
+
+
+
+router.get("/getSimilar", async function (req, res) {
+    await axios.get('http://localhost:9000/')
+        .then((result) => {
+            console.log(result.data)
+            console.log("in async");
+            return new Promise(async function (resolve, reject) {
+                const similarMovies = await generateResults(result.data)
+                console.log("i should go third");
+                //console.log(similarMovies);
+                const str = CircularJSON.stringify(similarMovies);
+                const ans2 = JSON.parse(str)
+                let ans = [];
+                for (let i = 0; i < ans2.length; i++) {
+                    ans2[i].data["poster_path"] = "https://image.tmdb.org/t/p/w500" + ans2[i].data["poster_path"]
+                    ans.push(ans2[i].data)
+                }
+                //await res.send(ans);
+                let discoverTVorMovie = {
+                    discoverMovie: ans,
+                    discoverTV: ""
+                }
+                res.render('D:/college/7th sem/project/mvc_arch_nodejs/views/movieWebsite/index', {
+                    discoverTVorMovie: discoverTVorMovie,
+                    title: 'Recommendation',
+                    addRemove: false
+                });
+            })
+        })
+})
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;
