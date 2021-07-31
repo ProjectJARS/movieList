@@ -51,7 +51,14 @@ a:active {
 <body>
     <div class="heading">
         <h1><b><a href="/"><img src="images/logo.png" style="height:50px;width:50px"/>Sinema</a></h1>
-        
+            <span style="font-weight:bold;margin-left:25px;font-size:25px;color:white;float:inline-end;">
+                <a href="/home"><span style="margin-left:25px;">Home</span></a>
+                <a href="/discover"><span style="margin-left:25px;">Discover</span></a>
+                <a href="http://localhost:4000/movie?searchId=<%= Math.floor(1000 + Math.random() * 800); %>&type=movie"><span style="margin-left:25px;">Random</span></a>
+                <a href="/myMovies"><span style="margin-left:25px;">My List</span></a>
+                <a href="/trending"><span style="margin-left:25px;">Trending</span></a>
+                <a href="/trending"><span style="margin-left:25px;color:black">KYT</span></a>
+            </span>
     </div>
 
     <div back>

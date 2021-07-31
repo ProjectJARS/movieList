@@ -128,13 +128,17 @@ async function generateResults(data) {
 
 
 
-router.get("/getSimilar", async function (req, res) {
-    await axios.get('http://localhost:9000/')
+router.get("/getSimilar/:id", async function (req, res) {
+    console.log(req.params.id)
+    await axios.post('http://localhost:9000/', {
+        "id": req.params.id
+    })
         .then((result) => {
             console.log(result.data)
             console.log("in async");
             return new Promise(async function (resolve, reject) {
                 const similarMovies = await generateResults(result.data)
+                console.log(similarMovies)
                 console.log("i should go third");
                 //console.log(similarMovies);
                 const str = CircularJSON.stringify(similarMovies);

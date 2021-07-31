@@ -51,7 +51,16 @@ a:active {
     <div class="heading">
         <h1><b><a href="/"><img src="images/logo.png" style="height:50px;width:50px"/>Sinema</a>
             </h1>
-        <div class="search">
+
+            <span style="font-weight:bold;margin-left:25px;font-size:25px;color:white;float:inline-end;">
+              <a href="/home"><span style="margin-left:25px;color:black">Home</span></a>
+              <a href="/discover"><span style="margin-left:25px;">Discover</span></a>
+              <a href="http://localhost:4000/movie?searchId=<%= Math.floor(1000 + Math.random() * 800); %>&type=movie"><span style="margin-left:25px;">Random</span></a>
+              <a href="/myMovies"><span style="margin-left:25px;">My List</span></a>
+              <a href="/trending"><span style="margin-left:25px;">Trending</span></a>
+          </span>
+        
+            <div class="search">
             <form action="/search" method="GET">   
             <input type="text" name="searchValue" id="myInput" class="searchBox" placeholder="Search and Find More">
             </form>
@@ -64,7 +73,7 @@ a:active {
 
         
         <div class="col-md-8">
-            <a href = '/discover' target="_blank">
+            <a href = '/discover'>
         <div class="card"  style="width: 40rem;max-height:10rem;color:white;background-color: #fe012b;">
             <div class="row g-0">              
               <div class="col-md-12">
@@ -84,7 +93,7 @@ a:active {
 
        
         <div class="col-md-4">
-            <a href="http://localhost:4000/movie?searchId=<%= Math.floor(1000 + Math.random() * 800); %>&type=movie" target="_blank">
+            <a href="http://localhost:4000/movie?searchId=<%= Math.floor(1000 + Math.random() * 800); %>&type=movie" >
           <div class="card"  style="width: 20rem;max-height:10rem;color:black;background-color: rgb(255, 255, 255);">
             <div class="row g-0">              
               <div class="col-md-12">
@@ -105,7 +114,7 @@ a:active {
 
         <div class="card-group row row-cols-1 row-cols-md-3 g-4">
             <div class="col-md-4">
-                <a href="/myMovies" target="_blank">
+                <a href="/myMovies" >
                 <div class="card"  style="width: 20rem;max-height:10rem;color:black;background-color: rgb(255, 255, 255);">
                   <div class="row g-0">              
                     <div class="col-md-12">
@@ -122,7 +131,7 @@ a:active {
                 </a>
                 </div>
             <div class="col-md-8">
-            <a href="/trending" target="_blank">
+            <a href="/trending" >
             <div class="card"  style="left:30px;width: 40rem;max-height:10rem;color:white;background-color: #fe012b;">
                 <div class="row g-0">              
                   <div class="col-md-12">

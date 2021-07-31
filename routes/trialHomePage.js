@@ -26,7 +26,9 @@ router.get("/home", function (req, res) {
 
 router.get("/", function (req, res) {
 	// let day = date.getDate();
-	res.render('home');
+	res.render('home', {
+		title: 'Home',
+	});
 	//res.render('D:/college/7th sem/project/mvc_arch_nodejs/views/movieWebsite/index');
 	//res.send('<a href = "/login" ><input type = "button" value="Login"></a><br><a href = "/register" ><input type = "button" value="Register"></a>');
 	//res.redirect('/discover')
