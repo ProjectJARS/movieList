@@ -20,9 +20,13 @@
     "express": "^4.17.1",
     "got": "^10.6.0",
     "https": "^1.0.0",
+<<<<<<< HEAD
     "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.12",
+=======
+    "morgan": "^1.10.0",
+>>>>>>> 1d6ebb29c2a69c2c10690b46dc83360b7e719ed3
     "redis": "^3.0.2"
   },
   "devDependencies": {

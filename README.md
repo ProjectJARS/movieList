@@ -2,6 +2,8 @@
 
 A web app helping users to keep a track of movies they have seen or want to see or share movie recommendations with friends
 
+Read More at https://drive.google.com/file/d/1oYPv5gElTKcq9G_XUDgw95TtvLUVBTnR/view
+
 # Pre Requisits
 1) Node Js must be installed.
 
